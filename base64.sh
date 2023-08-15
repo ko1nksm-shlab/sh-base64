@@ -18,7 +18,7 @@ base64encode() {
         for (i = 0; i < 64; i++) c[dec2bin(i, 6)] = substr(x, i + 1, 1)
       }
       {
-        pad = 3 - (length / 2); bits = chars = ""
+        pad = 3 - (length($0) / 2); bits = chars = ""
         for (i = 0; i < pad; i++) $0 = $0 "00"
         for (i = 1; i <= 6; i+=2) bits = bits b[substr($0, i, 2)]
         for (i = 1; i <= 24; i+=6) chars = chars c[substr(bits, i, 6)]
@@ -53,7 +53,7 @@ base64decode() {
         c["01011100"] = "\\\\\\\\"
       }
       {
-        bits = chars = ""; len = length
+        bits = chars = ""; len = length($0)
         for (i = 1; i <= len; i++) bits = bits b[substr($0, i, 1)]
         for (i = 1; i <= len * 6; i+=8) chars = chars c[substr(bits, i, 8)]
         print chars

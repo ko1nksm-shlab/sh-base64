@@ -35,6 +35,9 @@ YWJjCg==
 
 $ echo abc | ./base64 | ./base64 -d
 abc
+
+$ echo abc | AWK=mawk ./base64 | AWK=mawk ./base64 -d
+abc
 ```
 
 ## Performance

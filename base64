@@ -4,6 +4,10 @@ set -eu
 
 . ./base64.sh
 
+awk() {
+   command "${AWK:-awk}" "$@"
+}
+
 case ${1:-} in
   -d) base64decode ;;
   *) base64encode ;;
