@@ -3,7 +3,7 @@
 base64encode() {
   set -- "${1:-"+/="}"
   set -- "$@" "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
-  od -v -An -tx1 | LC_ALL=C tr -d ' \n' | LC_ALL=C fold -b -w6 | {
+  od -v -An -tx1 | LC_ALL=C tr -d ' \t\n' | LC_ALL=C fold -b -w6 | {
     LC_ALL=C awk -v x="$2${1%=}" -v p="${1#??}" '
       function dec2bin(n, w,  r) {
         r = ""
@@ -57,7 +57,8 @@ base64decode() {
       }
     '
   } | (
-    set -- '[ ${KSH_VERSION:+x} ] && alias printf="print -n";'
-    xargs -n 1000 sh -c "$1"'IFS=; printf -- "$*"' "${ZSH_ARGZERO:-"$0"}"
+    for_mksh='[ ${KSH_VERSION:+x} ] && alias printf="print -n";'
+    code='IFS=; printf -- "$*"' prog="${ZSH_ARGZERO:-"$0"}"
+    LC_ALL=C xargs -n 1000 -E '' sh -c "${for_mksh}${code}" "$prog"
   )
 }
