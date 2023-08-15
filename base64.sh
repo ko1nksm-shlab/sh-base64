@@ -1,10 +1,12 @@
 # shellcheck shell=sh disable=SC2016
 
 base64encode() {
-  set -- "${1:-"+/="}"
+  set -- "${1:-"+/="}" && set -- "${1%=}" "${1#??}"
   set -- "$@" "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
   od -v -An -tx1 | LC_ALL=C tr -d ' \t\n' | LC_ALL=C fold -b -w6 | {
-    LC_ALL=C awk -v x="$2${1%=}" -v p="${1#??}" '
+    # workaround for nawk: https://github.com/onetrueawk/awk/issues/38
+    [ "$2" = '=' ] && set -- "$1" '\075' "$3"
+    LC_ALL=C awk -v x="$3$1" -v p="$2" '
       function dec2bin(n, w,  r) {
         r = ""
         do { r = (n % 2) r } while ( n = int(n / 2) )
@@ -30,10 +32,10 @@ base64encode() {
 }
 
 base64decode() {
-  set -- "${1:-"+/="}"
+  set -- "${1:-"+/="}" && set -- "${1%=}" "${1#??}"
   set -- "$@" "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
   LC_ALL=C fold -b -w100 | { # fold width must be a multiple of 4
-    LC_ALL=C awk -v x="$2${1%=}" -v p="${1#??}" '
+    LC_ALL=C awk -v x="$3$1" '
       function dec2bin(n, w,  r) {
         r = ""
         do { r = (n % 2) r } while ( n = int(n / 2) )
