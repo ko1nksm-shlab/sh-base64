@@ -1,0 +1,10 @@
+#!/bin/sh
+
+set -eu
+
+. ./base64.sh
+
+case ${1:-} in
+  -d) base64decode ;;
+  *) base64encode ;;
+esac
