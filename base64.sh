@@ -12,6 +12,7 @@ base64encode() {
       }
       BEGIN {
         for (i = 0; i < 256; i++) b[sprintf("%02x", i)] = dec2bin(i, 8)
+        for (i = 0; i < 256; i++) b[sprintf("%02X", i)] = dec2bin(i, 8)
         for (i = 0; i < 64; i++) c[dec2bin(i, 6)] = substr(x, i + 1, 1)
       }
       {
