@@ -17,6 +17,8 @@ base64encode() {
       BEGIN {
         for (i = 0; i < 256; i++) b[sprintf("%02x", i)] = dec2bin(i, 8)
         for (i = 0; i < 256; i++) b[sprintf("%02X", i)] = dec2bin(i, 8)
+
+        # Process in pairs of two characters for better performance
         for (i = 0; i < 64; i++) {
           ik = dec2bin(i, 6); iv = substr(x, i + 1, 1); c[ik] = c [ik p] = iv
           for (j = 0; j < 64; j++) c[ik dec2bin(j, 6)] = iv substr(x, j + 1, 1)
@@ -49,10 +51,12 @@ base64decode() {
         return sprintf("%0" w "d", r)
       }
       BEGIN {
+        # Process in pairs of two characters for better performance
         for (i = 0; i < 64; i++) {
           ik = substr(x, i + 1, 1); iv = dec2bin(i, 6); b[ik] = b[ik p] = iv
           for (j = 0; j < 64; j++) b[ik substr(x, j + 1, 1)] = iv dec2bin(j, 6)
         }
+
         for (i = 1; i < 256; i++) c[dec2bin(i, 8)] = sprintf("%c", i)
         for (i = 48; i < 56; i++) c[dec2bin(i, 8)] = sprintf("\\\\%03o", i)
         c["00000000"] = "\\\\000"; c["00001001"] = "\\\\011" # NUL HT
