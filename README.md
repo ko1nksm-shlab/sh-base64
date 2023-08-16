@@ -44,13 +44,13 @@ abc
 ```
 
 ```console
-$ echo ">>>???"  | ./base64 # standard
+$ echo ">>>???" | ./base64      # standard
 Pj4+Pz8/Cg==
 
-$ echo ">>>???"  | ./base64 "+/" # no padding
+$ echo ">>>???" | ./base64 "+/" # no padding
 Pj4+Pz8/Cg
 
-$ echo ">>>???"  | ./base64 "-_" # base64url
+$ echo ">>>???" | ./base64 "-_" # base64url
 Pj4-Pz8_Cg
 ```
 
