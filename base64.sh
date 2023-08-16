@@ -4,7 +4,7 @@ base64encode() {
   set -- "${1:-"+/="}" && set -- "${1%=}" "${1#??}"
   set -- "$@" "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
   od -v -An -tx1 | LC_ALL=C tr -d ' \t\n' | {
-    LC_ALL=C fold -b -w60 # fold width must be a multiple of 6
+    LC_ALL=C fold -b -w120 # fold width must be a multiple of 6
   } | {
     # workaround for nawk: https://github.com/onetrueawk/awk/issues/38
     [ "$2" = '=' ] && set -- "$1" '\075' "$3"
