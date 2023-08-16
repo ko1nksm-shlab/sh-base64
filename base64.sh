@@ -35,14 +35,19 @@ base64decode() {
   set -- "${1:-"+/="}" && set -- "${1%=}" "${1#??}"
   set -- "$@" "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
   LC_ALL=C fold -b -w100 | { # fold width must be a multiple of 4
-    LC_ALL=C awk -v x="$3$1" '
+    # workaround for nawk: https://github.com/onetrueawk/awk/issues/38
+    [ "$2" = '=' ] && set -- "$1" '\075' "$3"
+    LC_ALL=C awk -v x="$3$1" -v p="$2" '
       function dec2bin(n, w,  r) {
         r = ""
         do { r = (n % 2) r } while ( n = int(n / 2) )
         return sprintf("%0" w "d", r)
       }
       BEGIN {
-        for (i = 0; i < 64; i++) b[substr(x, i + 1, 1)] = dec2bin(i, 6)
+        for (i = 0; i < 64; i++) {
+          ik = substr(x, i + 1, 1); iv = dec2bin(i, 6); b[ik] = b[ik p] = iv
+          for (j = 0; j < 64; j++) b[ik substr(x, j + 1, 1)] = iv dec2bin(j, 6)
+        }
         for (i = 1; i < 256; i++) c[dec2bin(i, 8)] = sprintf("%c", i)
         for (i = 48; i < 56; i++) c[dec2bin(i, 8)] = sprintf("\\\\%03o", i)
         c["00000000"] = "\\\\000"; c["00001001"] = "\\\\011" # NUL HT
@@ -54,7 +59,7 @@ base64decode() {
       }
       {
         bits = chars = ""; len = length($0)
-        for (i = 1; i <= len; i++) bits = bits b[substr($0, i, 1)]
+        for (i = 1; i <= len; i+=2) bits = bits b[substr($0, i, 2)]
         for (i = 1; i <= len * 6; i+=8) chars = chars c[substr(bits, i, 8)]
         print chars
       }
