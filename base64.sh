@@ -15,13 +15,16 @@ base64encode() {
       BEGIN {
         for (i = 0; i < 256; i++) b[sprintf("%02x", i)] = dec2bin(i, 8)
         for (i = 0; i < 256; i++) b[sprintf("%02X", i)] = dec2bin(i, 8)
-        for (i = 0; i < 64; i++) c[dec2bin(i, 6)] = substr(x, i + 1, 1)
+        for (i = 0; i < 64; i++) {
+          ik = dec2bin(i, 6); iv = substr(x, i + 1, 1); c[ik] = c [ik p] = iv
+          for (j = 0; j < 64; j++) c[ik dec2bin(j, 6)] = iv substr(x, j + 1, 1)
+        }
       }
       {
         pad = 3 - (length($0) / 2); bits = chars = ""
         for (i = 0; i < pad; i++) $0 = $0 "00"
         for (i = 1; i <= 6; i+=2) bits = bits b[substr($0, i, 2)]
-        for (i = 1; i <= 24; i+=6) chars = chars c[substr(bits, i, 6)]
+        for (i = 1; i <= 24; i+=12) chars = chars c[substr(bits, i, 12)]
         if (pad > 0) chars = substr(chars, 1, 4 - pad)
         while (pad--) chars = chars p
         printf "%s", chars

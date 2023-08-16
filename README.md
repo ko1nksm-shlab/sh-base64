@@ -69,9 +69,9 @@ sys 	0m0.067s
 $ time ./base64 < data.bin | md5sum
 8096a63dc595bae96d6dfcf797c9429d  -
 
-real	0m29.468s
-user	0m40.272s
-sys 	0m0.405s
+real	0m23.486s
+user	0m34.771s
+sys 	0m0.331s
 ```
 
 Base64 decoder comparison with `base64` command
