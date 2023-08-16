@@ -16,13 +16,12 @@ base64encode() {
     [ "$2" = '=' ] && set -- "$1" '\075' "$3"
     LC_ALL=C awk -v x="$3$1" -v p="$2" '
       function dec2bin(n, w,  r) {
-        r = ""
-        do { r = (n % 2) r } while ( n = int(n / 2) )
+        for (r = ""; n > 0; n = int(n / 2)) r = (n % 2) r
         return sprintf("%0" w "d", r)
       }
       BEGIN {
         for (i = 0; i < 256; i++) b[sprintf("%02x", i)] = dec2bin(i, 8)
-        for (i = 0; i < 256; i++) b[sprintf("%02X", i)] = dec2bin(i, 8)
+        for (i in b) b[toupper(i)] = b[i]
 
         # Process in pairs of two characters for better performance
         for (i = 0; i < 64; i++) {
@@ -58,8 +57,7 @@ base64decode() {
     [ "$2" = '=' ] && set -- "$1" '\075' "$3"
     LC_ALL=C awk -v x="$3$1" -v p="$2" '
       function dec2bin(n, w,  r) {
-        r = ""
-        do { r = (n % 2) r } while ( n = int(n / 2) )
+        for (r = ""; n > 0; n = int(n / 2)) r = (n % 2) r
         return sprintf("%0" w "d", r)
       }
       BEGIN {
