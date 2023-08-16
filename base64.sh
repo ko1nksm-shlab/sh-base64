@@ -20,7 +20,7 @@ base64encode() {
 
         # Process in pairs of two characters for better performance
         for (i = 0; i < 64; i++) {
-          ik = dec2bin(i, 6); iv = substr(x, i + 1, 1); c[ik] = c [ik p] = iv
+          ik = dec2bin(i, 6); iv = substr(x, i + 1, 1)
           for (j = 0; j < 64; j++) c[ik dec2bin(j, 6)] = iv substr(x, j + 1, 1)
         }
       }
