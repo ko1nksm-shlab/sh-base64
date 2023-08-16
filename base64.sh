@@ -3,7 +3,9 @@
 base64encode() {
   set -- "${1:-"+/="}" && set -- "${1%=}" "${1#??}"
   set -- "$@" "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
-  od -v -An -tx1 | LC_ALL=C tr -d ' \t\n' | LC_ALL=C fold -b -w6 | {
+  od -v -An -tx1 | LC_ALL=C tr -d ' \t\n' | {
+    LC_ALL=C fold -b -w60 # fold width must be a multiple of 6
+  } | {
     # workaround for nawk: https://github.com/onetrueawk/awk/issues/38
     [ "$2" = '=' ] && set -- "$1" '\075' "$3"
     LC_ALL=C awk -v x="$3$1" -v p="$2" '
@@ -21,11 +23,11 @@ base64encode() {
         }
       }
       {
-        pad = 3 - (length($0) / 2); bits = chars = ""
-        for (i = 0; i < pad; i++) $0 = $0 "00"
-        for (i = 1; i <= 6; i+=2) bits = bits b[substr($0, i, 2)]
-        for (i = 1; i <= 24; i+=12) chars = chars c[substr(bits, i, 12)]
-        if (pad > 0) chars = substr(chars, 1, 4 - pad)
+        len = length($0); pad = (3 - (len % 6 / 2)) % 3; bits = chars = ""
+        for (i = 0; i < pad; i++) { $0 = $0 "00"; len+=2 }
+        for (i = 1; i <= len; i+=2) bits = bits b[substr($0, i, 2)]
+        for (i = 1; i <= len * 4; i+=12) chars = chars c[substr(bits, i, 12)]
+        if (pad > 0) chars = substr(chars, 1, length(chars) - pad)
         while (pad--) chars = chars p
         printf "%s", chars
       }
