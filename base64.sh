@@ -1,5 +1,11 @@
 # shellcheck shell=sh disable=SC2016
 
+##########################################################################
+# Base64 encoder is released under the BSD Zero Clause License
+# https://github.com/ko1nksm/sh-base64
+##########################################################################
+# base64encode
+#   $1: the 62nd and 63rd characters and optional padding (default: +/=)
 base64encode() {
   set -- "${1:-"+/="}" && set -- "${1%=}" "${1#??}"
   set -- "$@" "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
@@ -38,6 +44,12 @@ base64encode() {
   }
 }
 
+##########################################################################
+# Base64 decoder is released under the BSD Zero Clause License
+# https://github.com/ko1nksm/sh-base64
+##########################################################################
+# base64decode
+#   $1: the 62nd and 63rd characters and optional padding (default: +/=)
 base64decode() {
   set -- "${1:-"+/="}" && set -- "${1%=}" "${1#??}"
   set -- "$@" "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
