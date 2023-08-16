@@ -9,6 +9,6 @@ awk() {
 }
 
 case ${1:-} in
-  -d) base64decode ;;
-  *) base64encode ;;
+  -d) shift && base64decode "$@" ;;
+  *) base64encode "$@" ;;
 esac

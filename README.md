@@ -30,6 +30,8 @@ base64decode "-_"  # Use - and _ for the 62nd and 63rd characters (base64url)
 
 ## Example
 
+Included `./base64` is for testing purposes.
+
 ```console
 $ echo abc | ./base64
 YWJjCg==
@@ -39,6 +41,17 @@ abc
 
 $ echo abc | AWK=mawk ./base64 | AWK=mawk ./base64 -d
 abc
+```
+
+```console
+$ echo ">>>???"  | ./base64 # standard
+Pj4+Pz8/Cg==
+
+$ echo ">>>???"  | ./base64 "+/" # no padding
+Pj4+Pz8/Cg
+
+$ echo ">>>???"  | ./base64 "-_" # base64url
+Pj4-Pz8_Cg
 ```
 
 ## Performance
