@@ -56,7 +56,7 @@ Pj4-Pz8_Cg
 
 ## Performance
 
-Test environment: macOS (CPU: 2.4 GHz dual-core Intel Core i5)
+### Preparation
 
 Created a 10 MB file for performance testing
 
@@ -68,6 +68,54 @@ $ md5sum data.bin data.base64
 a740084d87aaed16c1f4ea40a6acf1b0  data.bin
 8096a63dc595bae96d6dfcf797c9429d  data.base64
 ```
+
+### Case 1: Ubuntu
+
+Test environment: Ubuntu (CPU: 3.4 GHz quad-core)
+
+Base64 encoder comparison with `base64` command
+
+```console
+$ time base64 < data.bin | md5sum
+35419688d09e4be616e6bd95b1f029f5  -
+
+real    0m0.035s
+user    0m0.034s
+sys     0m0.023s
+
+Different hash values due to different fold back
+$ base64 < data.bin | paste -s -d '' | md5sum
+8096a63dc595bae96d6dfcf797c9429d  -
+
+$ time ./base64  < data.bin | md5sum
+8096a63dc595bae96d6dfcf797c9429d  -
+
+real    0m4.218s
+user    0m6.745s
+sys     0m0.142s
+```
+
+Base64 decoder comparison with `base64` command
+
+```console
+$ time base64 -d < data.base64 | md5sum
+a740084d87aaed16c1f4ea40a6acf1b0  -
+
+real    0m0.041s
+user    0m0.044s
+sys     0m0.022s
+
+$ time ./base64 -d < data.base64 | md5sum
+a740084d87aaed16c1f4ea40a6acf1b0  -
+
+real    0m4.141s
+user    0m4.575s
+sys     0m0.216s
+```
+
+### Case 2: macOS
+
+Test environment: macOS (CPU: 2.4 GHz dual-core)
 
 Base64 encoder comparison with `base64` command
 
